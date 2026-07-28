@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="寧雲技术支持中心 - 专业Windows系统重装、OEM定制、系统美化与优化、软件部署服务">
+  <meta name="keywords" content="Windows重装,系统定制,系统美化,软件部署,山东淄博,宁雲技术支持">
+  <meta name="author" content="寧雲技术支持中心">
+  <meta name="theme-color" content="#DC2626">
+  <meta property="og:title" content="寧雲技术支持中心">
+  <meta property="og:description" content="专注Windows系统定制、优化与软件部署，为每一位用户提供高效、可靠的技术服务。">
+  <meta property="og:type" content="website">
+  <title>寧雲技术支持中心 - 专业系统定制与运维服务</title>
+  <style>
+    /* ============ CSS 变量 / 设计令牌（蓝红白 4:5:1 比例） ============ */
+    :root {
+      --color-primary: #DC2626;
+      --color-primary-light: #F87171;
+      --color-primary-dark: #B91C1C;
+      --color-accent: #1E3A8A;
+      --color-accent-light: #3B82F6;
+      --color-accent-dark: #1E40AF;
+      --color-bg: #FFFFFF;
+      --color-surface: #F8FAFC;
+      --color-surface-alt: #FEF2F2;
+      --color-text: #0F172A;
+      --color-text-secondary: #334155;
+      --color-text-muted: #64748B;
+      --color-border: #E2E8F0;
+      --color-shadow: rgba(0,0,0,0.05);
+      --color-shadow-lg: rgba(0,0,0,0.1);
+      --color-navy: #152238;
+      --color-gold: #FFD700;
+      --radius-sm: 0.5rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.5rem;
+      --radius-full: 9999px;
+      --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, -apple-system, sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #0F172A;
+        --color-surface: #1E293B;
+        --color-surface-alt: #2D1A1A;
+        --color-text: #F1F5F9;
+        --color-text-secondary: #CBD5E1;
+        --color-text-muted: #94A3B8;
+        --color-border: #334155;
+        --color-shadow: rgba(0,0,0,0.3);
+        --color-shadow-lg: rgba(0,0,0,0.5);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+    h1, h2, h3 { line-height: 1.2; font-weight: 700; }
+    h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+    h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+    h3 { font-size: 1.2rem; }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ============ 导航栏 ============ */
+    .navbar {
+      position: sticky; top: 0; z-index: 100; background: var(--color-accent);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+    .logo { 
+      display: flex; align-items: center; font-weight: 700; font-size: 1.4rem; color: #FFFFFF;
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      font-weight: 500; color: rgba(255,255,255,0.9); transition: color var(--transition);
+      position: relative; padding: 0.25rem 0;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+      background: #FFFFFF; transition: width var(--transition);
+    }
+    .nav-links a:hover { color: #FFFFFF; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--color-primary); color: #fff; padding: 0.6rem 1.5rem; border-radius: var(--radius-full);
+      font-weight: 600; transition: background var(--transition), transform var(--transition);
+    }
+    .nav-cta:hover { background: var(--color-primary-dark); transform: translateY(-2px); }
+    .mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
+    .mobile-toggle span { width: 25px; height: 3px; background: #FFFFFF; border-radius: 2px; transition: all var(--transition); }
+    @media (max-width: 768px) {
+      .nav-links { position: fixed; top: 70px; left: 0; right: 0; background: var(--color-accent); flex-direction: column; padding: 2rem; gap: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 20px rgba(0,0,0,0.3); transform: translateY(-110%); transition: transform var(--transition); }
+      .nav-links.active { transform: translateY(0); }
+      .mobile-toggle { display: flex; }
+    }
+
+    /* ============ 通用区块 ============ */
+    section { padding: 5rem 0; }
+    .section-title { text-align: center; margin-bottom: 3.5rem; }
+    .section-title h2 { color: var(--color-text); margin-bottom: 0.8rem; }
+    .section-title p { color: var(--color-text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+    .divider-custom { width: 60px; height: 4px; background: var(--color-primary); margin: 1rem auto 0; border-radius: 2px; }
+
+    /* ============ 英雄区（毛玻璃背景） ============ */
+    .hero {
+      position: relative; overflow: hidden; color: #fff;
+      padding: 6rem 0 5rem;
+    }
+    .hero-bg {
+      position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+      background: linear-gradient(135deg, #DC2626 0%, #F87171 50%, #FEF2F2 100%);
+      background-size: cover;
+      background-position: center;
+      filter: blur(6px);
+      z-index: 0;
+    }
+    .hero .container {
+      position: relative; z-index: 2; display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;
+    }
+    .hero-text { flex: 1 1 400px; }
+    .hero-text h1 { color: #fff; margin-bottom: 1.2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+    .hero-text h1 span { color: var(--color-gold); }
+    .hero-text p { font-size: 1.15rem; color: rgba(255,255,255,0.95); margin-bottom: 2rem; line-height: 1.7; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+    .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 0.8rem 2rem; border-radius: var(--radius-full); font-weight: 600; font-size: 1rem;
+      transition: all var(--transition); cursor: pointer; text-align: center; border: 2px solid transparent;
+      text-shadow: none;
+    }
+    .btn-primary { background: #fff; color: var(--color-primary); border-color: #fff; }
+    .btn-primary:hover { background: var(--color-primary-dark); color: #fff; border-color: var(--color-primary-dark); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+    .btn-outline { background: transparent; color: #fff; border-color: #fff; }
+    .btn-outline:hover { background: #fff; color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .btn-accent { background: var(--color-gold); color: var(--color-accent); border-color: var(--color-gold); }
+    .btn-accent:hover { background: #FFC107; border-color: #FFC107; color: var(--color-accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255,215,0,0.4); }
+    .hero-image { flex: 1 1 400px; text-align: center; }
+    .hero-image img { max-width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.3); background: #fff; }
+
+    /* ============ 服务卡片 ============ */
+    .services { background: var(--color-surface-alt); }
+    .services-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .service-card {
+      flex: 0 1 300px; max-width: 360px;
+      background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md);
+      padding: 2rem 1.5rem; text-align: center; transition: all var(--transition);
+      box-shadow: 0 4px 12px var(--color-shadow); color: #000;
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: 0 16px 32px rgba(220,38,38,0.15); border-color: var(--color-primary-light); }
+    .service-icon { width: 60px; height: 60px; margin: 0 auto 1.5rem; background: var(--color-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .service-card h3 { margin-bottom: 0.8rem; color: #000; }
+    .service-card p { color: #000; font-size: 0.95rem; }
+
+    /* ============ 技术栈（蓝色背景） ============ */
+    .tech-stack { background: #EFF6FF; }
+    .tech-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+    .tech-tag {
+      background: #fff; border: 1px solid #BFDBFE; border-radius: var(--radius-full);
+      padding: 0.7rem 1.5rem; font-weight: 500; color: var(--color-accent); transition: all var(--transition);
+    }
+    .tech-tag:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); transform: translateY(-3px); }
+
+    /* ============ 关于我们（藏青色） ============ */
+    .about { background: var(--color-navy); color: #fff; }
+    .about .section-title h2 { color: #fff; }
+    .about .section-title p { color: rgba(255,255,255,0.8); }
+    .about .divider-custom { background: #fff; }
+    .about-content { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
+    .about-text { flex: 1 1 400px; }
+    .about-text p { margin-bottom: 1.2rem; color: rgba(255,255,255,0.9); }
+    .about-text strong { color: #fff; }
+    .about-image { flex: 1 1 300px; text-align: center; }
+    .about-image img { border-radius: var(--radius-lg); box-shadow: 0 16px 32px rgba(0,0,0,0.3); max-width: 320px; background: #E2E8F0; }
+    .about .btn-outline { color: #fff; border-color: #fff; }
+    .about .btn-outline:hover { background: #fff; color: var(--color-navy); }
+
+    /* ============ 联系 CTA ============ */
+    .contact-cta {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: #fff; text-align: center; padding: 4rem 0;
+    }
+    .contact-cta h2 { color: #fff; margin-bottom: 1rem; }
+    .contact-cta p { color: rgba(255,255,255,0.85); margin-bottom: 2rem; font-size: 1.1rem; }
+    .contact-cta .btn { background: #fff; color: var(--color-primary); border: none; }
+    .contact-cta .btn:hover { background: var(--color-accent-light); color: #fff; }
+
+    /* ============ 页脚 ============ */
+    .footer {
+      background: var(--color-accent); color: rgba(255,255,255,0.8); padding: 2rem 0; font-size: 0.9rem;
+    }
+    .footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer a { color: #fff; text-decoration: underline; }
+    .footer a:hover { color: var(--color-primary-light); }
+
+    /* ============ 弹窗 ============ */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal-content {
+      background: var(--color-surface); border-radius: var(--radius-lg); max-width: 320px; width: 100%; padding: 30px 20px 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3); position: relative; text-align: center;
+      border: 1px solid var(--color-border); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.active .modal-content { transform: scale(1); }
+    .modal-close {
+      position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 24px; line-height: 1; cursor: pointer;
+      color: var(--color-text-secondary); transition: color 0.2s; padding: 4px;
+    }
+    .modal-close:hover { color: var(--color-primary); }
+    .modal-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 16px; color: var(--color-text); }
+    .qr-image {
+      width: 200px; height: 200px; object-fit: contain; border-radius: var(--radius-md); border: 1px solid var(--color-border);
+      background: #fff; padding: 8px; margin: 0 auto 12px; display: block;
+    }
+    .qr-placeholder {
+      width: 200px; height: 200px; border-radius: var(--radius-md); border: 1px dashed var(--color-border);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--color-text-muted);
+      font-size: 0.8rem; background: var(--color-surface-alt); flex-direction: column; gap: 0.5rem;
+    }
+    .modal-note { font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 8px; }
+
+    /* ============ 响应式微调 ============ */
+    @media (max-width: 768px) {
+      .hero .container { flex-direction: column; text-align: center; }
+      .about-content { flex-direction: column; text-align: center; }
+      .service-card { flex: 0 1 280px; }
+      .about .btn-outline { margin: 0 auto; display: inline-block; }
+      .hero-buttons { justify-content: center; }
+      .modal-content { padding: 24px 16px 16px; }
+      .qr-image, .qr-placeholder { width: 160px; height: 160px; }
+    }
+
+    @media print {
+      .navbar, .hero-bg { display: none; }
+      body { background: white; }
+      section { padding: 1rem 0; }
+      .service-card, .tech-tag { box-shadow: none; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== 导航栏（图标已移除） ========== -->
+  <nav class="navbar" role="navigation" aria-label="主导航">
+    <div class="container">
+      <a href="#" class="logo" aria-label="寧雲技术支持中心首页">
+        <span>寧雲技术支持中心</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#services">服务项目</a>
+        <a href="#tech">技术栈</a>
+        <a href="#about">关于我们</a>
+        <a href="#contact" class="nav-cta">联系我们</a>
+      </div>
+      <div class="mobile-toggle" id="mobileToggle" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ========== 英雄区（毛玻璃背景） ========== -->
+    <section class="hero" id="home">
+      <div class="hero-bg" style="background-image: url('./hero-bg.jpg'); background-size: cover; background-position: center;"
+           onerror="this.style.background='linear-gradient(135deg, #DC2626 0%, #F87171 50%, #FEF2F2 100%)';"></div>
+      <div class="container">
+        <div class="hero-text">
+          <h1>专业<span>系统定制</span>与<span>运维支持</span></h1>
+          <p>寧雲技术支持中心，扎根山东淄博，面向全国提供远程及本地技术服务。从系统重装到个性化美化，从软件部署到OEM定制，为您打造稳定、高效、美观的Windows环境。</p>
+          <div class="hero-buttons">
+            <a href="#services" class="btn btn-primary">了解服务</a>
+            <a href="javascript:void(0);" id="priceBtn" class="btn btn-accent">咨询价格</a>
+            <a href="#contact" class="btn btn-outline">立即联系</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="./hero-image.jpg" alt="Windows系统定制服务示意图" width="500" height="350" loading="eager"
+               onerror="this.src='https://placehold.co/500x350/FFFFFF/DC2626?text=Windows+定制服务';this.style.background='none';">
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 服务项目 ========== -->
+    <section id="services" class="services" aria-labelledby="services-title">
+      <div class="container">
+        <div class="section-title">
+          <h2 id="services-title">核心服务</h2>
+          <p>我们提供全流程的 Windows 系统解决方案，覆盖个人电脑到企业批量部署。</p>
+          <div class="divider-custom"></div>
+        </div>
+        <div class="services-grid">
+          <article class="service-card">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>Windows 系统重装</h3>
+            <p>纯净安装、驱动适配、数据备份恢复，告别卡顿蓝屏，系统焕然一新。</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <h3>OEM 系统定制</h3>
+            <p>个性化品牌信息、预装软件、系统封装，让每一台电脑都带有您的印记。</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>系统美化优化</h3>
+            <p>界面定制、主题安装、性能调优、垃圾清理，让系统既好看又流畅。</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/></svg>
+            </div>
+            <h3>软件批量部署</h3>
+            <p>常用软件一键安装包定制，网络同传部署，节省大量装机时间。</p>
+          </article>
+          <article class="service-card">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v8M8 12h8"/></svg>
+            </div>
+            <h3>正版系统</h3>
+            <p>提供正版Windows系统授权与激活服务，确保系统安全稳定、后续无忧。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 技术栈 ========== -->
+    <section id="tech" class="tech-stack" aria-labelledby="tech-title">
+      <div class="container">
+        <div class="section-title">
+          <h2 id="tech-title">技术栈 & 工具</h2>
+          <p>我们熟练运用以下工具与技术，保障服务专业高效。</p>
+          <div class="divider-custom"></div>
+        </div>
+        <div class="tech-grid">
+          <div class="tech-tag">Windows ADK</div>
+          <div class="tech-tag">映像部署</div>
+          <div class="tech-tag">注册表优化</div>
+          <div class="tech-tag">系统安全</div>
+          <div class="tech-tag">自动化脚本</div>
+          <div class="tech-tag">远程协助</div>
+          <div class="tech-tag">云备份</div>
+          <div class="tech-tag">系统封装</div>
+          <div class="tech-tag">OEM信息恢复</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 关于我们 ========== -->
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section-title">
+          <h2 id="about-title">关于寧雲</h2>
+          <p>一位热爱技术、注重细节的独立技术人。</p>
+          <div class="divider-custom"></div>
+        </div>
+        <div class="about-content">
+          <div class="about-text">
+            <p>我是<strong>寧雲</strong>，寧雲技术支持中心的创始人及唯一负责人。作为一名资深IT爱好者，我始终相信「让技术回归服务」的理念。</p>
+            <p>不同于一键重装软件，我提供的是<strong>人工精细化服务</strong>：针对每一台电脑的硬件配置与使用习惯，定制最适合的系统方案。无论您是个人用户还是小型企业，都能在这里得到耐心、细致的支持。</p>
+            <p>坐标山东淄博，提供远程协助及本地上门服务（限淄博区域）。期待用我的专业，解决您的电脑烦恼。</p>
+            <a href="#contact" class="btn btn-outline" style="margin-top:1rem;">与我沟通</a>
+          </div>
+          <div class="about-image">
+            <img src="./about-image.jpg" alt="寧雲" width="300" height="300" loading="lazy"
+                 onerror="this.src='https://placehold.co/300x300/FFFFFF/DC2626?text=寧雲';this.style.background='none';">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 联系 CTA ========== -->
+    <section id="contact" class="contact-cta" aria-labelledby="contact-title">
+      <div class="container">
+        <h2 id="contact-title">准备好让电脑焕然一新了吗？</h2>
+        <p>发送邮件或添加微信，描述您的需求，我会尽快回复。</p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem;">
+          <a href="mailto:nzy0533060811@hotmail.com" class="btn" style="background:#fff; color:var(--color-primary);">
+            发送邮件
+          </a>
+          <a href="https://ningyun.icu" target="_blank" rel="noopener" class="btn" style="background:#fff; color:var(--color-primary);">
+            访问官网
+          </a>
+        </div>
+        <p style="font-size:0.9rem; opacity:0.9;">山东淄博 &nbsp;|&nbsp; nzy0533060811@hotmail.com</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <span>&copy; 2026 寧雲技术支持中心. All rights reserved.</span>
+      <span>
+        <a href="https://github.com/NingyunTechSupport" target="_blank" rel="noopener">GitHub</a>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ========== 价格弹窗 ========== -->
+  <div class="modal-overlay" id="priceModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="closeModalBtn" aria-label="关闭弹窗">&times;</button>
+      <div class="modal-title" id="modalTitle">扫码咨询价格</div>
+      <img class="qr-image" src="./enterprise-wechat-qr.jpg" alt="企业微信二维码" id="qrImage"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="qr-placeholder" style="display:none;" aria-hidden="true">
+        <span>请将二维码图片命名为</span>
+        <span><strong>enterprise-wechat-qr.jpg</strong></span>
+        <span>放在同一目录下</span>
+      </div>
+      <p class="modal-note">扫描二维码，添加企业微信咨询</p>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const toggle = document.getElementById('mobileToggle');
+      const navLinks = document.getElementById('navLinks');
+      if (toggle && navLinks) {
+        toggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+      }
+
+      const priceBtn = document.getElementById('priceBtn');
+      const modal = document.getElementById('priceModal');
+      const closeBtn = document.getElementById('closeModalBtn');
+      if (priceBtn && modal && closeBtn) {
+        const open = () => { modal.classList.add('active'); modal.setAttribute('aria-hidden', 'false'); closeBtn.focus(); };
+        const close = () => { modal.classList.remove('active'); modal.setAttribute('aria-hidden', 'true'); };
+        priceBtn.addEventListener('click', e => { e.preventDefault(); open(); });
+        closeBtn.addEventListener('click', close);
+        modal.addEventListener('click', e => { if(e.target === modal) close(); });
+        document.addEventListener('keydown', e => { if(e.key === 'Escape' && modal.classList.contains('active')) close(); });
+      }
+    })();
+  </script>
+</body>
+</html>
