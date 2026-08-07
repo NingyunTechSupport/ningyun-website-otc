@@ -11,6 +11,8 @@
   <meta property="og:description" content="专注Windows系统定制、优化与软件部署，为每一位用户提供高效、可靠的技术服务。">
   <meta property="og:type" content="website">
   <title>寧雲技术支持中心 - 专业系统定制与运维服务</title>
+  <!-- 标签页图标：藏青色齿轮图标 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6' fill='none' stroke='%23152238' stroke-width='2.5'/><circle cx='16' cy='16' r='2' fill='%23152238'/><rect x='14' y='2' width='4' height='7' rx='1' fill='%23152238'/><rect x='14' y='23' width='4' height='7' rx='1' fill='%23152238'/><rect x='2' y='14' width='7' height='4' rx='1' fill='%23152238'/><rect x='23' y='14' width='7' height='4' rx='1' fill='%23152238'/></svg>">
   <style>
     /* ============ CSS 变量 / 设计令牌（蓝红白 4:5:1 比例） ============ */
     :root {
@@ -31,6 +33,8 @@
       --color-shadow-lg: rgba(0,0,0,0.1);
       --color-navy: #152238;
       --color-gold: #FFD700;
+      --color-service-bg: #E8F0F8;
+      --color-tech-bg: #FEF2F2;
       --radius-sm: 0.5rem;
       --radius-md: 1rem;
       --radius-lg: 1.5rem;
@@ -44,6 +48,8 @@
         --color-bg: #0F172A;
         --color-surface: #1E293B;
         --color-surface-alt: #2D1A1A;
+        --color-service-bg: #1A2430;
+        --color-tech-bg: #2D1A1A;
         --color-text: #F1F5F9;
         --color-text-secondary: #CBD5E1;
         --color-text-muted: #94A3B8;
@@ -70,6 +76,17 @@
     h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
     h3 { font-size: 1.2rem; }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* 粒子画布：覆盖全屏，鼠标穿透 */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      pointer-events: none;
+    }
 
     /* ============ 导航栏 ============ */
     .navbar {
@@ -105,13 +122,13 @@
     }
 
     /* ============ 通用区块 ============ */
-    section { padding: 5rem 0; }
+    section { padding: 5rem 0; position: relative; z-index: 1; }
     .section-title { text-align: center; margin-bottom: 3.5rem; }
     .section-title h2 { color: var(--color-text); margin-bottom: 0.8rem; }
     .section-title p { color: var(--color-text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
     .divider-custom { width: 60px; height: 4px; background: var(--color-primary); margin: 1rem auto 0; border-radius: 2px; }
 
-    /* ============ 英雄区（毛玻璃背景） ============ */
+    /* ============ 英雄区（毛玻璃背景 + 幻灯片） ============ */
     .hero {
       position: relative; overflow: hidden; color: #fff;
       padding: 6rem 0 5rem;
@@ -143,31 +160,88 @@
     .btn-outline:hover { background: #fff; color: var(--color-primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     .btn-accent { background: var(--color-gold); color: var(--color-accent); border-color: var(--color-gold); }
     .btn-accent:hover { background: #FFC107; border-color: #FFC107; color: var(--color-accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255,215,0,0.4); }
-    .hero-image { flex: 1 1 400px; text-align: center; }
-    .hero-image img { max-width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.3); background: #fff; }
+    
+    /* 幻灯片容器 */
+    .hero-image { flex: 1 1 400px; text-align: center; position: relative; }
+    .slideshow {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      background: #fff;
+    }
+    .slideshow img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: opacity 0.8s ease-in-out;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .slideshow img.active {
+      opacity: 1;
+      position: relative;
+    }
+    .slide-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .slide-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .slide-dot.active {
+      background: var(--color-gold);
+    }
 
-    /* ============ 服务卡片 ============ */
-    .services { background: var(--color-surface-alt); }
+    /* ============ 核心服务（浅藏蓝背景 + 增强悬停发光） ============ */
+    .services { background: var(--color-service-bg); }
     .services-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
     .service-card {
       flex: 0 1 300px; max-width: 360px;
-      background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md);
+      background: #fff; border: 2px solid transparent; border-radius: var(--radius-md);
       padding: 2rem 1.5rem; text-align: center; transition: all var(--transition);
       box-shadow: 0 4px 12px var(--color-shadow); color: #000;
     }
-    .service-card:hover { transform: translateY(-8px); box-shadow: 0 16px 32px rgba(220,38,38,0.15); border-color: var(--color-primary-light); }
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 32px rgba(220,38,38,0.25), 0 0 0 4px rgba(220,38,38,0.15);
+      border-color: var(--color-primary-light);
+    }
     .service-icon { width: 60px; height: 60px; margin: 0 auto 1.5rem; background: var(--color-primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .service-card h3 { margin-bottom: 0.8rem; color: #000; }
     .service-card p { color: #000; font-size: 0.95rem; }
 
-    /* ============ 技术栈（蓝色背景） ============ */
-    .tech-stack { background: #EFF6FF; }
+    /* ============ 技术栈（红色背景 + 悬停蓝色亮起） ============ */
+    .tech-stack { background: var(--color-tech-bg); }
     .tech-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
     .tech-tag {
-      background: #fff; border: 1px solid #BFDBFE; border-radius: var(--radius-full);
-      padding: 0.7rem 1.5rem; font-weight: 500; color: var(--color-accent); transition: all var(--transition);
+      background: #fff;
+      border: 2px solid #FECACA;
+      border-radius: var(--radius-full);
+      padding: 0.7rem 1.5rem;
+      font-weight: 500;
+      color: var(--color-accent);
+      transition: all var(--transition);
+      cursor: default;
     }
-    .tech-tag:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); transform: translateY(-3px); }
+    .tech-tag:hover {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent-light);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(30,58,138,0.45), 0 0 0 3px rgba(59,130,246,0.25);
+    }
 
     /* ============ 关于我们（藏青色） ============ */
     .about { background: var(--color-navy); color: #fff; }
@@ -203,7 +277,7 @@
 
     /* ============ 弹窗 ============ */
     .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000;
       display: flex; align-items: center; justify-content: center; padding: 20px;
       opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
       backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
@@ -244,7 +318,7 @@
     }
 
     @media print {
-      .navbar, .hero-bg { display: none; }
+      .navbar, .hero-bg, #particleCanvas { display: none; }
       body { background: white; }
       section { padding: 1rem 0; }
       .service-card, .tech-tag { box-shadow: none; border: 1px solid #ccc; }
@@ -252,7 +326,10 @@
   </style>
 </head>
 <body>
-  <!-- ========== 导航栏（图标已移除） ========== -->
+  <!-- 动态粒子画布（稀疏、连线保留） -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- ========== 导航栏 ========== -->
   <nav class="navbar" role="navigation" aria-label="主导航">
     <div class="container">
       <a href="#" class="logo" aria-label="寧雲技术支持中心首页">
@@ -271,7 +348,7 @@
   </nav>
 
   <main>
-    <!-- ========== 英雄区（毛玻璃背景） ========== -->
+    <!-- ========== 英雄区（毛玻璃背景 + 幻灯片） ========== -->
     <section class="hero" id="home">
       <div class="hero-bg" style="background-image: url('./hero-bg.jpg'); background-size: cover; background-position: center;"
            onerror="this.style.background='linear-gradient(135deg, #DC2626 0%, #F87171 50%, #FEF2F2 100%)';"></div>
@@ -286,13 +363,21 @@
           </div>
         </div>
         <div class="hero-image">
-          <img src="./hero-image.jpg" alt="Windows系统定制服务示意图" width="500" height="350" loading="eager"
-               onerror="this.src='https://placehold.co/500x350/FFFFFF/DC2626?text=Windows+定制服务';this.style.background='none';">
+          <div class="slideshow" id="slideshow">
+            <img src="./hero-image-1.jpg" alt="服务展示1" class="active" onerror="this.src='https://placehold.co/500x350/FFFFFF/DC2626?text=Windows+定制服务'">
+            <img src="./hero-image-2.jpg" alt="服务展示2" onerror="this.src='https://placehold.co/500x350/FFFFFF/1E3A8A?text=系统优化'">
+            <img src="./hero-image-3.jpg" alt="服务展示3" onerror="this.src='https://placehold.co/500x350/FFFFFF/DC2626?text=正版授权'">
+          </div>
+          <div class="slide-dots" id="slideDots">
+            <span class="slide-dot active" data-index="0"></span>
+            <span class="slide-dot" data-index="1"></span>
+            <span class="slide-dot" data-index="2"></span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ========== 服务项目 ========== -->
+    <!-- ========== 核心服务（浅藏蓝背景 + 增强悬停发光） ========== -->
     <section id="services" class="services" aria-labelledby="services-title">
       <div class="container">
         <div class="section-title">
@@ -340,7 +425,7 @@
       </div>
     </section>
 
-    <!-- ========== 技术栈 ========== -->
+    <!-- ========== 技术栈（红色背景 + 悬停蓝色亮起） ========== -->
     <section id="tech" class="tech-stack" aria-labelledby="tech-title">
       <div class="container">
         <div class="section-title">
@@ -391,14 +476,11 @@
         <h2 id="contact-title">准备好让电脑焕然一新了吗？</h2>
         <p>发送邮件或添加微信，描述您的需求，我会尽快回复。</p>
         <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem;">
-          <a href="mailto:nzy0533060811@hotmail.com" class="btn" style="background:#fff; color:var(--color-primary);">
+          <a href="mailto:nypub1916@ningyun.top" class="btn" style="background:#fff; color:var(--color-primary);">
             发送邮件
           </a>
-          <a href="https://ningyun.icu" target="_blank" rel="noopener" class="btn" style="background:#fff; color:var(--color-primary);">
-            访问官网
-          </a>
         </div>
-        <p style="font-size:0.9rem; opacity:0.9;">山东淄博 &nbsp;|&nbsp; nzy0533060811@hotmail.com</p>
+        <p style="font-size:0.9rem; opacity:0.9;">山东淄博 &nbsp;|&nbsp; nypub1916@ningyun.top</p>
       </div>
     </section>
   </main>
@@ -431,6 +513,128 @@
 
   <script>
     (function() {
+      // ========== 粒子动画（稀疏、连线保留） ==========
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      const particles = [];
+      const particleCount = 35;
+
+      const colors = [
+        'rgba(220, 38, 38, 0.35)',
+        'rgba(30, 58, 138, 0.35)',
+        'rgba(59, 130, 246, 0.3)',
+        'rgba(255, 255, 255, 0.3)',
+      ];
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+
+      function createParticle() {
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 2.2 + 1.2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          opacity: Math.random() * 0.4 + 0.2,
+          fadeSpeed: (Math.random() - 0.5) * 0.008,
+        };
+      }
+
+      function initParticles() {
+        particles.length = 0;
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(createParticle());
+        }
+      }
+
+      function updateParticles() {
+        for (let p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          p.opacity += p.fadeSpeed;
+          if (p.opacity >= 0.55 || p.opacity <= 0.1) p.fadeSpeed *= -1;
+        }
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, w, h);
+        for (let p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color.replace(/[\d.]+\)$/, p.opacity + ')');
+          ctx.fill();
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 110) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              const lineOpacity = (1 - dist / 110) * 0.08;
+              ctx.strokeStyle = `rgba(255, 255, 255, ${lineOpacity})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animateParticles() {
+        updateParticles();
+        drawParticles();
+        requestAnimationFrame(animateParticles);
+      }
+
+      resize();
+      initParticles();
+      animateParticles();
+      window.addEventListener('resize', () => { resize(); initParticles(); });
+
+      // ========== 幻灯片播放 ==========
+      const slides = document.querySelectorAll('#slideshow img');
+      const dots = document.querySelectorAll('#slideDots .slide-dot');
+      let currentSlide = 0;
+      const totalSlides = slides.length;
+
+      function showSlide(index) {
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+      }
+
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+      }
+
+      // 自动播放每3秒
+      let slideInterval = setInterval(nextSlide, 3000);
+
+      // 点击圆点切换
+      dots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentSlide = index;
+          showSlide(index);
+          // 重置自动播放
+          clearInterval(slideInterval);
+          slideInterval = setInterval(nextSlide, 3000);
+        });
+      });
+
+      // ========== 移动端菜单 ==========
       const toggle = document.getElementById('mobileToggle');
       const navLinks = document.getElementById('navLinks');
       if (toggle && navLinks) {
@@ -438,6 +642,7 @@
         navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
       }
 
+      // ========== 价格弹窗 ==========
       const priceBtn = document.getElementById('priceBtn');
       const modal = document.getElementById('priceModal');
       const closeBtn = document.getElementById('closeModalBtn');
